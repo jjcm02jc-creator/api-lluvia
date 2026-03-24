@@ -1,0 +1,6 @@
+@api_lluvia_HostAddress = http://localhost:5058
+
+GET {{api_lluvia_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
