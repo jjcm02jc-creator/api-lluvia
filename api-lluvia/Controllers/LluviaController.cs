@@ -3,6 +3,9 @@ using api_lluvia.Services;
 
 namespace api_lluvia.Controllers
 {
+    
+    
+    
     [ApiController]
     [Route("api/lluvia")]
     public class LluviaController : ControllerBase
@@ -20,5 +23,29 @@ namespace api_lluvia.Controllers
                 vDia = data.vDia
             });
         }
+
+        [HttpGet("debug/cache")]
+        public IActionResult VerCache()
+        {
+            var resultado = ScrapingService.cache.Select(x => new
+            {
+                estacionId = x.Key,
+                ultimaActualizacion = x.Value.UltimaActualizacion,
+                ultimaConsulta = x.Value.UltimaConsulta,
+                v10 = x.Value.Datos.v10,
+                v30 = x.Value.Datos.v30,
+                v60 = x.Value.Datos.v60,
+                vDia = x.Value.Datos.vDia
+            });
+
+            return Ok(new
+            {
+                total = ScrapingService.cache.Count,
+                estaciones = resultado
+            });
+        }
+
+
+
     }
 }

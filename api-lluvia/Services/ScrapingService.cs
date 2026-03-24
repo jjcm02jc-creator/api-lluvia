@@ -4,21 +4,40 @@ using System.Text.Json;
 
 namespace api_lluvia.Services
 {
+
+
     public static class ScrapingService
     {
-        static Dictionary<string, (DateTime tiempo, (string, string, string, string) data)> cache = new();
+       
+
+        public static Dictionary<string, CacheItem> cache = new();
+
+        public class CacheItem
+        {
+            public DateTime UltimaActualizacion { get; set; }
+            public DateTime UltimaConsulta { get; set; }
+            public (string v10, string v30, string v60, string vDia) Datos { get; set; }
+        }
 
 
         public static async Task<(string v10, string v30, string v60, string vDia)> ObtenerAcumuladosAsync(string estacionid)
         {
+            // 🔍 1. REVISAR CACHE
             if (cache.ContainsKey(estacionid))
             {
-                var entry = cache[estacionid];
-                if ((DateTime.Now - entry.tiempo).TotalMinutes < 10)
-                    return entry.data;
+                var item = cache[estacionid];
 
+                // 🔄 actualizar última consulta
+                item.UltimaConsulta = DateTime.Now;
+
+                // ⏱ si no han pasado 10 min → devolver cache
+                if ((DateTime.Now - item.UltimaActualizacion).TotalMinutes < 10)
+                {
+                    return item.Datos;
+                }
             }
 
+            // 🌐 2. HACER SCRAPING (igual que ya tienes)
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
@@ -60,8 +79,13 @@ namespace api_lluvia.Services
 
                 var resultado = (v10, v30, v60, vDia);
 
-                // 🔥 GUARDAR CACHE AQUÍ
-                cache[estacionid] = (DateTime.Now, resultado);
+                // 💾 3. GUARDAR / ACTUALIZAR CACHE
+                cache[estacionid] = new CacheItem
+                {
+                    Datos = resultado,
+                    UltimaActualizacion = DateTime.Now,
+                    UltimaConsulta = DateTime.Now
+                };
 
                 return resultado;
             }
