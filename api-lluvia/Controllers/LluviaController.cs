@@ -30,8 +30,13 @@ namespace api_lluvia.Controllers
             var resultado = ScrapingService.cache.Select(x => new
             {
                 estacionId = x.Key,
-                ultimaActualizacion = x.Value.UltimaActualizacion,
-                ultimaConsulta = x.Value.UltimaConsulta,
+                ultimaActualizacion = x.Value.UltimaActualizacion
+                .ToLocalTime()
+                .ToString("dd/MM/yyyy HH:mm:ss"),
+
+                ultimaConsulta = x.Value.UltimaConsulta
+                .ToLocalTime()
+                .ToString("dd/MM/yyyy HH:mm:ss"),
                 v10 = x.Value.Datos.v10,
                 v30 = x.Value.Datos.v30,
                 v60 = x.Value.Datos.v60,

@@ -8,7 +8,9 @@ var app = builder.Build();
 
 app.MapControllers();
 
-app.Run();
+
+
+const string API_KEY = "qweasd";
 
 var timer = new Timer(_ =>
 {
@@ -25,3 +27,5 @@ var timer = new Timer(_ =>
     }
 
 }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+
+app.Run();
