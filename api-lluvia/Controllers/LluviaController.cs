@@ -50,6 +50,25 @@ namespace api_lluvia.Controllers
             });
         }
 
+        [HttpPost("validar-serial")]
+        public IActionResult ValidarSerial([FromBody] SolicitudSerial solicitud)
+        {
+            // Lee la variable de entorno llamada "SERIAL_VALIDO" configurada en Render
+            string serialCorrecto = Environment.GetEnvironmentVariable("SERIAL_VALIDO")
+                                    ?? "SERIAL_POR_DEFECTO";
+
+            if (solicitud.Serial == serialCorrecto)
+            {
+                return Ok(new { Valido = true });
+            }
+
+            return Ok(new { Valido = false });
+        }
+        public class SolicitudSerial
+        {
+            public string Serial { get; set; }
+        }
+
 
 
     }
