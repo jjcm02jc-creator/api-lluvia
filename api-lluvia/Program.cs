@@ -28,4 +28,6 @@ var timer = new Timer(_ =>
 
 }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
 
+app.MapControllers();
+
 app.Run();
