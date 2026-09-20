@@ -4,7 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddHostedService<RadarWorker>();
+
 var app = builder.Build();
+
+app.UseAuthorization();
 
 app.MapControllers();
 
@@ -28,6 +32,6 @@ var timer = new Timer(_ =>
 
 }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
 
-app.MapControllers();
+
 
 app.Run();
