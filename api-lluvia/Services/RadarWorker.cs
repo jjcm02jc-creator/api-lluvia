@@ -60,7 +60,7 @@ public class RadarWorker : BackgroundService
             int anchoMini = 60;
             int altoMini = (int)((double)altoOriginal / anchoOriginal * anchoMini);
 
-            using var miniBitmap = originalBitmap.Resize(new SKImageInfo(anchoMini, altoMini), SKSamplingOptions.Default);
+            using var miniBitmap = originalBitmap.Resize(new SKImageInfo(anchoMini, altoMini), SKFilterQuality.Medium);
 
             var clustersLluvia = new List<PixelPos>();
             int paso = 2;
